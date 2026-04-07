@@ -1,0 +1,6 @@
+[functions]
+  node_bundler = "esbuild"
+  directory = "netlify/functions"
+
+[functions."format-document"]
+  external_node_modules = ["docx"]
