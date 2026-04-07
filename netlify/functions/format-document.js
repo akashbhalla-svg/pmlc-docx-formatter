@@ -168,6 +168,9 @@ function buildTable(rows) {
   if (rows.length === 0) return null;
 
   const columnCount = rows[0].length;
+  // Total usable width ~6.7 inches (8.5 - 1.15 margins on each side), in twips
+  const totalWidth = convertInchesToTwip(6.7);
+  const cellWidth = Math.floor(totalWidth / columnCount);
 
   const tableRows = rows.map((row, rowIndex) => {
     const isHeader = rowIndex === 0;
@@ -181,6 +184,7 @@ function buildTable(rows) {
             spacing: { before: 60, after: 60 },
           }),
         ],
+        width: { size: cellWidth, type: WidthType.DXA },
         shading: {
           type: ShadingType.SOLID,
           color: isHeader ? BRAND.tableHeader : isAlternate ? BRAND.lightGrey : BRAND.white,
@@ -226,6 +230,7 @@ function buildTable(rows) {
             spacing: { before: 60, after: 60 },
           }),
         ],
+        width: { size: cellWidth, type: WidthType.DXA },
         shading: {
           type: ShadingType.SOLID,
           color: BRAND.tableHeader,
@@ -252,10 +257,14 @@ function buildTable(rows) {
     });
   }
 
+  // Build column widths array
+  const colWidths = Array(columnCount).fill(cellWidth);
+
   return new Table({
     rows: tableRows,
-    width: { size: 100, type: WidthType.PERCENTAGE },
+    width: { size: totalWidth, type: WidthType.DXA },
     layout: TableLayoutType.FIXED,
+    columnWidths: colWidths,
   });
 }
 
